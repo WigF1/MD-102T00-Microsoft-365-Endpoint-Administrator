@@ -163,13 +163,17 @@ You've also been told that several more employees will be hired over the next co
     Connect-MgGraph -scopes "user.readwrite.all, group.readwrite.all"
     ```
 
-8. A new tab in **Microsoft Edge** will appear prompting you to sign in. In the **Sign in to your account** dialog box, sign in as **`admin@yourtenant.onmicrosoft.com`** with the tenant password, and then select **Sign in**.
+8. When prompted in the **Let's get you signed in** window, select **Work or School account** and then select **Sign-in**.
 
-9. On the **Permissions Requested** prompt that appears, check **Consent on behalf of your organization** and then select **Accept**.
+10. A new tab in **Microsoft Edge** will appear prompting you to sign in. In the **Sign in to your account** dialog box, sign in as **`admin@yourtenant.onmicrosoft.com`** with the tenant password, and then select **Sign in**.
 
-10. Close out of the **Authentication complete** tab and then minimize **Microsoft Edge**
+11. On the **Permissions Requested** prompt that appears, check **Consent on behalf of your organization** and then select **Accept**.
 
-11. Back In the **PowerShell 7** window, type the following code to create a new profile object, and then press **enter**. Replace **Pa55w.rd** with a complex password of your choice:
+11. On the **stay signed in XXXX** select, **No, this app only**.
+
+12. Close out of the **Authentication complete** tab and then minimize **Microsoft Edge**
+
+13. Back In the **PowerShell 7** window, type the following code to create a new profile object, and then press **enter**. Replace **Pa55w.rd** with a complex password of your choice:
 
     ```powershell
     $PWProfile = @{
@@ -178,7 +182,7 @@ You've also been told that several more employees will be hired over the next co
     }
     ```
     
-12. Next, type the following code to create a new user, and then press **Enter**. Ensure "yourtenant" matches your assigned tenant name:
+14. Next, type the following code to create a new user, and then press **Enter**. Ensure "yourtenant" matches your assigned tenant name:
 
     ```powershell
     New-MgUser `
@@ -191,7 +195,7 @@ You've also been told that several more employees will be hired over the next co
         -Department "Sales" -JobTitle "Sales Rep"
     ```
 
-13. To confirm that the user **Cody Godinez** was created, In the **PowerShell 7** window, type the following command and then press **Enter**:
+15. To confirm that the user **Cody Godinez** was created, In the **PowerShell 7** window, type the following command and then press **Enter**:
 
     ```powershell
     Get-MgUser
@@ -231,31 +235,31 @@ You have been provided a list of users should have administrative roles assigned
 
 6. Under **Select members**, select **No member selected**, then search for and select **Allan Deyoung**.
 
-7. Select **Add**.
+7. Select **Select**, then select **Next**, and finally select **Assign**.
 
 8. In the navigation breadcrumbs, select **Roles & administrators | All roles**.
 
 9. Using the search box, search for **User administrator**.
 
-10. Select **User administrator**.
+10. Select **User administrator** (select the name, not the checkbox).
 
 11. In the **User administrator** pane, select **+ Add assignments**.
 
 12. Under **Select members**, select **No member selected**, then search for and select **Edmund Reeve**.
 
-13. Select **Add**.
+13. Select **Select**, then select **Next**, and finally select **Assign**.
 
 14. In the navigation breadcrumbs, select **Roles & administrators | All roles**.
 
 15. Using the search box, search for **Helpdesk administrator**.
 
-16. Select **Helpdesk administrator**.
+16. Select **Helpdesk administrator** (select the name, not the checkbox).
 
 17. In the **Helpdesk administrator** pane, select **+ Add assignments**
 
 18. Under **Select members**, select **No member selected**, then search for and select **Miranda Snider**.
 
-19. Select **Add**.
+19. Select **Select**, then select **Next**, and finally select **Assign**.
 
 20. In the navigation pane, select **Home**.
 
@@ -359,9 +363,9 @@ You also been asked to modify the Company branding for the sign-in page.
 
 7. In the Microsoft Entra admin center, in the Navigation pane, select **Users**.
 
-8. In the user list, select **Cody Godinez**.
+8. In the user list, select **Cody Godinez** (select the name, not the checkbox).
 
-9. In the Cody Godinez Profile page, under Manage, select **Licenses**.
+9. In the Cody Godinez Profile page, in the center navigation menu, select **Licenses**.
 
    > Notice that Cody does not have any current license assignments. And that licensing must now be performed in the 365 Admin center.
 

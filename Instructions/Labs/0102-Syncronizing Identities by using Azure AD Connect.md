@@ -86,7 +86,7 @@ Contoso Corporation is currently managing users in both AD DS and Entra ID as se
 
 8. Verify that you see users from your local AD DS. Ensure that these users have the value **Yes** in the **On-premises sync enabled** column. 
 
-9. In the Navigation pane, select **Groups**, then select **All Groups**. Verify that you see groups from your local AD DS. Ensure that these groups have the value **Windows Server AD** in the **Source** column.
+9. In the Navigation pane, select **Groups**, then select **All Groups**. Verify that you see groups from your local AD DS. Ensure that these groups have the value **Windows Server AD** in the **Source** column (you will need to use the horiztonal scroll bar and scroll to the right to be able to see the **Source** column).
 
 10. Select the **Managers** group.
 

@@ -98,19 +98,19 @@ When a user uses a device that is marked as non-compliant, they should not be ab
 
 3. On the **Conditional Access | Policies** blade, select **New policy**.
 
-4. On the **New** blade, in the **Name** text box, type **Conditional1** and then select **0 users and groups selected**.
+4. On the **New** blade, in the **Name** text box, type **Conditional1** and then select **0 users and agents (Preview) selected**.
 
 5. Under **Include**, select the **All users** radio button.
 
 6. In the **Target resources** section, select **No target resources selected**.
 
-7. Under **Include** choose the **Select resources** radio button, under the Select heading, select **None**, select **Office 365 Exchange Online**, and then click **Select**.
+7. Under **Include** choose the **Select resources** radio button, under the **Select specific resources** heading, select **None**, select **Office 365 Exchange Online**, and then click **Select**.
 
 8. In the **Conditions** section, select **0 conditions selected**. 
 
-9. In the list of conditions, under **Device platforms**, select **Not configured**. In the **Configure** section select **Yes**, select the **Select device platforms** radio button, select the **Windows** check box, and then select **Done**.
+9. In the list of conditions, under **Device platforms**, select **Not configured**. In the **Configure** section select **Yes**, choose the **Select device platforms** radio button, select the **Windows** check box, and then select **Done**.
 
-10. In the **Grant** section, select **0 controls selected**. Select the **Require device to be marked as compliant** check box, and then select **Select**.
+10. In the **Grant** section, select **0 controls selected**. Select the **Require device to be marked as compliant** check box, and then click **Select**.
 
 11. On the **New** blade, select **On** for the **Enable policy** option and then select **Create**.
 
@@ -138,7 +138,7 @@ When a user uses a device that is marked as non-compliant, they should not be ab
 
 9. A dialog box will appear asking, "**Automatically sign in to all desktops apps and websites on this device?**". Select **No, sign in to this app only**.
 
-    > Note: A dialog will appear stating, "**Let's set up your profile to access org resources**". This is because SEA-WS3 is not joined to Entra ID and not managed by Intune. As such, you are unable to access Aarons' mailbox from this device.
+    > Note: A page will appear stating, "**Let's set up your profile to access org resources**". This is because SEA-WS3 is not joined to Entra ID and not managed by Intune. As such, you are unable to access Aarons' mailbox from this device.
 
 10. **Close** all windows and sign out of **SEA-WS3**.
 

@@ -44,102 +44,112 @@ You've also been told that several more employees will be hired over the next co
 
    > Note: Check with your instructor on the password to use for signing in with the Admin account.
 
-7. At the Save password prompt, select **Save & Turn on**.
+7. At the Edge Save password prompt, select **Save & Turn on**.
 
-8. At the Stay signed in prompt, select **No**. The Entra admin center opens.
+8. At the Stay signed in prompt, select **Yes**.
 
-9. In the Microsoft Entra admin center, in the navigation pane, select **Users**.
+9. On the **Let's keep your account secure** dialog, select **Next**.
+
+10. On the **Install Microsoft Authenticator** dialog, select **Next**.
+
+11. On the **set up your account in app** page, select **Next**.
+
+12. Using the Authenticator app on your mobile device, scan the QR code and then select **Next**.
+
+13. On the **Let's try it out** dialog, take note of the code, enter that in to your Authenticator app.
+
+14. On the **Authenticator Added** dialog, select **Done**. 
+
+15. In the Microsoft Entra admin center, in the navigation pane, select **Users**.
 
     > Take note of the users that already exist as members of the Microsoft Entra ID. The **On-premises sync enabled** column states **No** for all current users. This indicates that each user was created directly in Microsoft Entra ID and not synchronized from an on-premises directory service.
 
-10. On the **Users | All users** page, select **New user** then select **Create new user**.
+16. On the **Users | All users** page, select **New user** then select **Create new user**.
 
-11. On the **Create new user** page, enter the following:
+17. On the **Create new user** page, enter the following:
 
     - User Principal Name: **ereeve**
     - Display Name: **Edmund Reeve**
 
-12. Uncheck **Auto-generated password**
+18. Uncheck **Auto-generated password**
 
-13. Next to **Password**, enter **Pa55-w.rd!**.
+19. Next to **Password**, enter **Pa55-w.rd!**.
 
-    > Note: If you receive an error message stating that this password in weak or commonly used, enter the tenant password found under the **Resources** tab of this lab profile. Alternatively, you can enter a complex password of your choice.
-    
-14. Select **Next: Properties** located at the bottom of the page.
+    > Note: If you receive an error message stating that this password in weak or commonly used, enter the student password found under the **Resources** tab of this lab profile. Alternatively, you can enter a complex password of your choice.
 
-15. Next to **First name**, enter **Edmund**.
+20. Select **Next: Properties** located at the bottom of the page.
 
-16. Next to **Last name**, enter **Reeve**.
+21. Next to **First name**, enter **Edmund**.
 
-17. Next to **User type**, make note that **Member** is selected.
+22. Next to **Last name**, enter **Reeve**.
+
+23. Next to **User type**, make note that **Member** is selected.
 
     > Note: The **Member** user type is the default user type. This user type is used for most users in an organization.
 
-18. Next to **Job title**, enter **HR Rep**.
+24. Next to **Job title**, enter **HR Rep**.
 
-19. Next to **Department**, enter **HR**.
+25. Next to **Department**, enter **HR**.
 
-20. Next to **Usage location**, select **United States**.
+26. Next to **Usage location**, select **United States**.
 
-21. Select **Next: Assignments** located at the bottom of the page.
+27. Select **Next: Assignments** located at the bottom of the page.
 
-22. On the **Assignments** page, note that no assignments are selected.
+28. On the **Assignments** page, note that no assignments are selected.
 
     > By default, no groups are assigned to the user. This is because the user is not a member of any groups until you assign them.
 
-23. Select **Next: Review + create** located at the bottom of the page.
+29. Select **Next: Review + create** located at the bottom of the page.
     > Review the information on this page to ensure that it is correct.
 
-24. Select **Create**.
+30. Select **Create**.
 
-25. On the **Users | All users** page, select **New user** then select **Create new user**.
+31. On the **Users | All users** page, select **New user** then select **Create new user**.
 
-26. On the **Create new user** page, enter the following:
+32. On the **Create new user** page, enter the following:
 
     - User Principal Name: **msnider**
     - Display Name: **Miranda Snider**
 
-27. Uncheck **Auto-generated password**
+33. Uncheck **Auto-generated password**
 
-28. Next to **Password**, enter **Pa55-w.rd!**.
+34. Next to **Password**, enter **Pa55-w.rd!**.
 
-    > Note: If you receive an error message stating that this password in weak or commonly used, enter the tenant password found under the **Resources** tab of this lab profile. Alternatively, you can enter a complex password of your choice.
+    > Note: If you receive an error message stating that this password in weak or commonly used, enter the student password found under the **Resources** tab of this lab profile. Alternatively, you can enter a complex password of your choice.
 
-29. Select **Next: Properties** located at the bottom of the page.
+35. Select **Next: Properties** located at the bottom of the page.
 
-30. Next to **First name**, enter **Miranda**.
+36. Next to **First name**, enter **Miranda**.
 
-31. Next to **Last name**, enter **Snider**.
+37. Next to **Last name**, enter **Snider**.
 
-32. Next to **User type**, make note that **Member** is selected.
+38. Next to **User type**, make note that **Member** is selected.
 
-33. Next to **Job title**, enter **Helpdesk Manager**.
+39. Next to **Job title**, enter **Helpdesk Manager**.
 
-34. Next to **Department**, enter **Operations**.
+40. Next to **Department**, enter **Operations**.
 
-35. Next to **Usage location**, select **United States**.
+41. Next to **Usage location**, select **United States**.
 
-36. Select **Next: Assignments** located at the bottom of the page.
+42. Select **Next: Assignments** located at the bottom of the page.
 
-37. On the **Assignments** page, note that no assignments are selected.
+43. On the **Assignments** page, note that no assignments are selected.
 
-38. Select **Next: Review + create** located at the bottom of the page.
+44. Select **Next: Review + create** located at the bottom of the page.
 
-39. Select **Create**.
-
-40. Minimize the **Microsoft Edge** window.
+45. Select **Create**.
 
 ### Task 2: Create users by using PowerShell
 
-# Steps to install PowerShell 7.5.2 on SEA-SVR1
+# Steps to install PowerShell 7.5.4 on SEA-SVR1
 
-1. On **SEA-SVR1**, open **Microsoft Edge**.  
+1. On **SEA-SVR1**, in **Microsoft Edge**, open a new tab.  
 
-2. In the address bar, enter **https://github.com/PowerShell/powershell/releases/download/v7.5.2/PowerShell-7.5.2-win-x64.msi**  
+2. In the address bar, enter **https://github.com/PowerShell/PowerShell/releases/download/v7.5.4/PowerShell-7.5.4-win-x64.msi**  
 
 3. On the taskbar, select **File Explorer**, then navigate to your **Downloads** folder.  
 
-4. Double-click **PowerShell-7.5.2-win-x64.msi** to launch the setup wizard.  
+4. Double-click **PowerShell-7.5.4-win-x64.msi** to launch the setup wizard.  
 
    - Select **Next**  
    - Leave the **Destination Folder** as is, then select **Next**  
@@ -163,17 +173,15 @@ You've also been told that several more employees will be hired over the next co
     Connect-MgGraph -scopes "user.readwrite.all, group.readwrite.all"
     ```
 
-8. When prompted in the **Let's get you signed in** window, select **Work or School account** and then select **Sign-in**.
+8. When prompted in the **Let's get you signed in** window, select **Work or School account** and then select **Continue**.
 
-10. A new tab in **Microsoft Edge** will appear prompting you to sign in. In the **Sign in to your account** dialog box, sign in as **`admin@yourtenant.onmicrosoft.com`** with the tenant password, and then select **Sign in**.
+9. In the **Sign in** dialog box, sign in as **`admin@yourtenant.onmicrosoft.com`** with the tenant password, and then select **Sign in**.
 
-11. On the **Permissions Requested** prompt that appears, check **Consent on behalf of your organization** and then select **Accept**.
+10. On the **Permissions Requested** prompt that appears, check **Consent on behalf of your organization** and then select **Accept**.
 
-11. On the **stay signed in XXXX** select, **No, this app only**.
+11. On the **Sign in to all apps, websites, and services on this device?** select, **No, this app only**.
 
-12. Close out of the **Authentication complete** tab and then minimize **Microsoft Edge**
-
-13. Back In the **PowerShell 7** window, type the following code to create a new profile object, and then press **enter**. Replace **Pa55w.rd** with a complex password of your choice:
+12. In the **PowerShell 7** window, type the following code to create a new profile object, and then press **enter**. Replace **Pa55w.rd** with a complex password of your choice:
 
     ```powershell
     $PWProfile = @{
@@ -347,7 +355,7 @@ You also been asked to modify the Company branding for the sign-in page.
 
 1. In the Microsoft Entra admin center, in the navigation pane, select **Billing** > **Licenses**.
 
-2. On the **Licenses|Overview** page, under **Manage**, select **All products**.
+2. On the **Licenses** page, in the center navigation pane, under **Manage**, select **All products**.
 
    > Take note of the current licenses available and assigned for **Enterprise Mobility + Security E5** and **Office 365 E5**.
 

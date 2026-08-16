@@ -109,7 +109,7 @@ The Help Desk has indicated that a large number of support tickets are related t
 
 10. On the **Enter code** page, enter the verification you recieved in an SMS.
 
-11. If you are presented with a **Protect your account** dialog, select **Skip for now (*x* times left)**.
+11. If you are presented with an **Improve your sign-ins** dialog, select **Skip for now (*x* times left)**.
 
 12. If prompted to **Stay signed in?**, select **No**.
 

@@ -67,9 +67,9 @@ It's been determined that all the information on SEA-WS1 should be encrypted. Yo
      - Require additional authentication at startup: **Enabled**
      - Configure minimum PIN length for startup: **Enabled**
      - Choose how Bitlocker-protected operating system drives can be recovered: **Enabled**
+     - Save Bitlocker recovery information to AD DS for operating system drives: **True**
      - Do not enable Bitlocker until recovery information is stored to AD DS for operating system drives: **True**
      - Omit recovery options from the BitLocker setup wizard: **True**
-     - Save Bitlocker recovery information to AD DS for operating system drives: **True**
 
 12. On the **Configurations settings** page, select **Next**.
 
@@ -77,7 +77,7 @@ It's been determined that all the information on SEA-WS1 should be encrypted. Yo
 
 14. On the **Assignments** tab, search for **Contoso** and then select **Contoso Developer devices**, and then select **Next**.
 
-16. On the **Review + create** page, select **Save**.
+16. On the **Review + create** page, select **Create**.
 
 17. Close all open windows on **SEA-SVR1**.
 

@@ -126,7 +126,7 @@ You need to prepare for device management using Microsoft Intune. First of all, 
 
 21. On the **Review + create** page, select **Create**.
 
-    > Notice the Sales Device Enrollment Limit, configured with a Device limit of 10 and assigned with a priority of 1.
+    > Notice the Sales Device Enrollment Limit, configured with a Device limit of 10.
 
 ### Task 4: Configure a Device enrollment manager
 

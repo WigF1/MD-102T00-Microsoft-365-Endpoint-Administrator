@@ -35,7 +35,7 @@ You need to configure Entra ID device settings to ensure that all users are allo
 
 2. On the taskbar select **Microsoft Edge**, in the address bar type **https://entra.microsoft.com**, and then press **Enter**.
 
-3. Sign in as user `Admin@yourtenant.onmicrosoft.com`, and use the tenant Admin password. If the **Stay signed in?** prompt appears, select **No**. 
+3. Sign in as user `Admin@yourtenant.onmicrosoft.com`, and use the tenant Admin password. If the **Stay signed in?** prompt appears, select **Yes**. 
 
    > The Microsoft Entra admin center opens.
 
@@ -139,11 +139,12 @@ You need to configure Entra ID device settings to ensure that all users are allo
 
 1. Switch to **SEA-WS1** and then sign in as **`JoniS@yourtenant.onmicrosoft.com`** with the user password you used in the previous task. 
 
+
 2. At the **Use Windows Hello with your account** page, select **OK**.
 
 3. On the **Let's keep your account secure** page, select **Next**.
 
-4. On the **Install Microsoft Authenticator** page, select **Set up a different way to sign in**. **Note** Ensure you select the correct link.
+4. On the **Install Microsoft Authenticator** page, select **Other**. **Note** Ensure you select the correct link.
 
 5. On the **Add a sign-in method** dialog box, select **Phone**.
 

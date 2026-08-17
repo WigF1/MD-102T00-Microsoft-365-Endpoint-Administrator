@@ -150,15 +150,15 @@ You've also been told that several more employees will be hired over the next co
 
 ### Task 2: Create users by using PowerShell
 
-# Steps to install PowerShell 7.5.4 on SEA-SVR1
+# Steps to install PowerShell 7.6.5 on SEA-SVR1
 
 1. On **SEA-SVR1**, in **Microsoft Edge**, open a new tab.  
 
-2. In the address bar, enter **https://github.com/PowerShell/PowerShell/releases/download/v7.5.4/PowerShell-7.5.4-win-x64.msi**  
+2. In the address bar, enter **https://github.com/PowerShell/PowerShell/releases/download/v7.6.5/PowerShell-7.6.5-win-x64.msi**  
 
 3. On the taskbar, select **File Explorer**, then navigate to your **Downloads** folder.  
 
-4. Double-click **PowerShell-7.5.4-win-x64.msi** to launch the setup wizard.  
+4. Double-click **PowerShell-7.6.5-win-x64.msi** to launch the setup wizard.  
 
    - Select **Next**  
    - Leave the **Destination Folder** as is, then select **Next**  

@@ -1,7 +1,7 @@
 ---
 lab:
   title: 'Lab 02: Manage and maintain devices'
-  description: 'In this lab, you create device configuration profiles, compliance policies, and Windows Update rings, analyze Group Policy Objects for migration, and enable Endpoint analytics and proactive remediations.'
+  description: 'In this lab, you create device configuration profiles, compliance policies, and Windows Update rings, analyze Group Policy Objects for migration, and enable Endpoint analytics and Remediations.'
   duration: 100 minutes
   level: 200
   islab: true
@@ -27,7 +27,7 @@ By the end of this lab, you'll have:
 - Analyzed Group Policy Objects for migration readiness using Group Policy analytics
 - Configured update rings, a Feature update profile, and an Expedited Quality update policy
 - Enabled Endpoint analytics and reviewed device performance insights
-- Deployed a proactive remediation script
+- Deployed a remediation script
 - Used the Troubleshooting blade to investigate device status, diagnose policy conflicts, and inspect Conditional Access impact
 
 ---
@@ -53,7 +53,7 @@ This lab requires:
 > [!NOTE]
 > **The Intune Devices workload has been reorganized.** All the configuration, compliance, scripts, and Group Policy analytics surfaces now live under a **Manage devices** group inside the Devices left navigation. **Windows updates** lives under **By platform > Windows**. **Assignment filters** has moved to **Tenant administration > Assignment filters**. This lab uses the current navigation paths throughout.
 >
-> **Tenant prerequisite for Exercise 5 — Remediations:** Proactive remediations require **Windows license verification**, which you'll enable as part of **Exercise 5 Task 2**. If your lab tenant doesn't own one of the required Windows/Microsoft 365 licenses, you can still walk through the wizard, but the script package won't execute on devices.
+> **Tenant prerequisite for Exercise 5 — Remediations:** Remediations require **Windows license verification**, which you'll enable as part of **Exercise 5 Task 2**. If your lab tenant doesn't own one of the required Windows/Microsoft 365 licenses, you can still walk through the wizard, but the script package won't execute on devices.
 
 ---
 
@@ -66,6 +66,10 @@ Configuration profiles allow you to manage device settings at scale. You'll crea
 ### Task 1: Create a Settings Catalog profile
 
 The Settings Catalog provides access to thousands of individual settings across Windows, macOS, iOS, and Android.
+
+1. If necessary, sign in to **SEA-DEV1** as Megan:
+   - **User:** `MeganB@<TenantPrefix>.OnMicrosoft.com`
+   - **Password:** (Megan Bowen's password) (use the pre-provided `<UserPassword>`)
 
 1. On **SEA-DEV1**, open **Microsoft Edge** and navigate to **https://intune.microsoft.com**.
 
@@ -410,7 +414,7 @@ The **Send email to end user** noncompliance action needs a message template to 
    - **Code integrity:** Require
 
 1. Expand **Device Properties** and configure:
-   - **Minimum OS version:** `10.0.19045` (Windows 11 22H2 or Windows 10 21H2)
+   - **Minimum OS version:** `10.0.19045` (Windows 10 22H2)
 
 1. Expand **System Security** and configure:
    - **Require a password to unlock mobile devices:** Require
@@ -432,12 +436,10 @@ The **Send email to end user** noncompliance action needs a message template to 
 1. On the **Actions for noncompliance** tab, configure the default action:
    - **Mark device noncompliant:** 7 days
 
-1. Select **Add** to add an additional action.
-
-1. Configure the new action:
+1. On the row below the Mark device noncompliant, configure another action:
    - **Action:** Send email to end user
    - **Schedule (days after noncompliance):** 1
-   - **Message template:** Select **Default** (or create a custom template)
+   - **Message template:** Select **Default**
    - **Additional recipients:** Leave blank
 
    > [!NOTE]
@@ -480,8 +482,8 @@ The **Send email to end user** noncompliance action needs a message template to 
 
 1. Select **SEA-DEV1** from the device list.
 
-1. Review the **Compliance** tab:
-   - **Compliance status:** May show "Not evaluated," "Compliant," or "Not compliant"
+1. In the **Essentials** section, below the device name **SEA-DEV1** review the following:
+   - **Compliance:** May show "Not evaluated," "Compliant,", "In grace period", or "Not compliant"
    - **Last check-in:** Timestamp of last sync with Intune
 
    > [!NOTE]
@@ -506,7 +508,7 @@ A compliance policy on its own doesn't block anything — it just marks devices 
 1. On the **New** policy page, configure:
    - **Name:** `CA - Require compliant device (Pharmacy pilot)`
 
-1. Under **Assignments** → **Users or agents**, select **0 users or agents selected**:
+1. Under **Assignments** → **Users**, select **0 users or agents selected**:
    - On the **Include** tab, select **Select users and groups** → check **Users and groups** → select **sg-Intune-Pilot-Users** → **Select**.
    - On the **Exclude** tab, select **Users and groups** → select **admin@<TenantPrefix>.onmicrosoft.com** (or whichever account you signed in with) → **Select**.
 
@@ -594,7 +596,7 @@ Contoso has existing Group Policy Objects (GPOs) from an on-premises Active Dire
 
 ### Task 2: Review the migration readiness report and migrate supported settings
 
-1. On the **Group Policy analytics** page, select **GPO_Desktop_Settings** from the list.
+1. On the **Group Policy analytics** page, select the **25%** in the **MDM Support** column in the list.
 
 1. The **Settings** tab opens to a table with one row per setting. Review the columns:
    - **Setting name** and **Group policy setting category**
@@ -612,7 +614,7 @@ Contoso has existing Group Policy Objects (GPOs) from an on-premises Active Dire
    - **Remove Run menu from Start Menu**
    - **Prevent changes to Taskbar and Start Menu Settings**
 
-   Leave the **No**-support settings unchecked — migrating them wouldn't produce a working setting anyway. Select **Next**.
+   Select **Next**.
 
 1. On the **Configuration** tab, review the imported values (carried over from the GPO), then select **Next**.
 
@@ -665,7 +667,7 @@ You'll use Windows Update for Business policies (Update rings) to control when d
 1. In the **Microsoft Intune admin center**, select **Devices**, under **By platform** select **Windows**, then on the Windows blade select **Windows updates**.
 
    > [!NOTE]
-   > The page header reads **Devices | Windows updates**. The tabs are **Releases**, **Update rings**, **Feature updates**, **Quality updates**, **Driver updates**, and **Monitor**. The page opens on **Releases** — you'll switch tabs in the next step.
+   > The page header reads **Windows | Windows updates**. The tabs are **Releases**, **Update rings**, **Feature updates**, **Quality updates**, **Driver updates**, and **Monitor**. The page opens on **Releases** — you'll switch tabs in the next step.
    >
    > The page may also display two banners that are safe to ignore for the lab:
    >
@@ -793,9 +795,9 @@ The pilot cohort (`sg-Intune-Pilot-Users`, created in **Lab 01 Exercise 1**) is 
 
 ### Task 4: Create a Feature update profile
 
-Update rings control *when* updates install. **Feature update profiles** control *which version* of Windows devices are pinned to — a separate axis. You'll create a Feature update profile that pins the broader fleet to Windows 11 24H2 while the pilot cohort runs ahead via the Pilot update ring.
+Update rings control *when* updates install. **Feature update profiles** control *which version* of Windows devices are pinned to — a separate axis. You'll create a Feature update profile that pins the broader fleet to Windows 11 25H2 while the pilot cohort runs ahead via the Pilot update ring.
 
-1. In the **Microsoft Intune admin center**, in **Devices** → **Windows updates**, select the **Feature updates** tab.
+1. In the **Microsoft Intune admin center**, select **Devices**, under **By platform** select **Windows**, then on the Windows blade select **Windows updates**, then select **Feature updates** tab.
 
 1. Select **+ Create > Create feature update policy**.
 
@@ -826,7 +828,7 @@ Update rings control *when* updates install. **Feature update profiles** control
 
 **Expedited Quality updates** push out-of-band security patches faster than the normal deferral window. They're the right answer for an active zero-day. You'll create a policy that installs the latest critical security patch within 2 days, overriding any deferral the regular Update ring would apply.
 
-1. In **Devices** → **Windows updates**, select the **Quality updates** tab.
+1. In **Windows** → **Windows updates**, select the **Quality updates** tab.
 
 1. Select **+ Create > Expedite policy**.
 
@@ -853,11 +855,11 @@ Update rings control *when* updates install. **Feature update profiles** control
 
 ---
 
-## Exercise 5: Enable Endpoint analytics and proactive remediations
+## Exercise 5: Enable Endpoint analytics and Remediations
 
 ### Scenario
 
-Endpoint analytics provides insights into device performance, startup times, and user experience. Proactive remediations automatically detect and fix common issues before users report problems.
+Endpoint analytics provides insights into device performance, startup times, and user experience. Remediations automatically detect and fix common issues before users report problems.
 
 ### Task 1: Enable Endpoint analytics
 
@@ -893,7 +895,7 @@ Endpoint analytics provides insights into device performance, startup times, and
 
 ### Task 2: Enable Windows license verification
 
-Proactive remediations require Windows license verification to be enabled at the tenant level before you can create or run a script package. You'll enable it now, before building the remediation in Task 3.
+Remediations require Windows license verification to be enabled at the tenant level before you can create or run a script package. You'll enable it now, before building the remediation in Task 3.
 
 1. In the **Microsoft Intune admin center**, select **Tenant administration**, then select **Connectors and tokens**.
 
@@ -910,9 +912,9 @@ Proactive remediations require Windows license verification to be enabled at the
 
 ---
 
-### Task 3: Create a proactive remediation script package
+### Task 3: Create a remediation script package
 
-Proactive remediations run PowerShell scripts on devices to detect and fix issues automatically.
+Remediations run PowerShell scripts on devices to detect and fix issues automatically.
 
 1. In the **Microsoft Intune admin center**, select **Devices**, then under **Manage devices** select **Scripts and remediations**.
 
@@ -987,7 +989,7 @@ Proactive remediations run PowerShell scripts on devices to detect and fix issue
 
 1. On the **Review + create** tab, select **Create**.
 
-**You have successfully created a proactive remediation script package.**
+**You have successfully created a remediation script package.**
 
 ---
 
@@ -1003,7 +1005,7 @@ Proactive remediations run PowerShell scripts on devices to detect and fix issue
    - **Last check-in:** Timestamp of last script execution
 
    > [!NOTE]
-   > Proactive remediations run on a schedule (default: once per day). After initial policy deployment, wait 1–2 hours for the first execution, then check the results.
+   > Remediations run on a schedule (default: once per day). After initial policy deployment, wait 1–2 hours for the first execution, then check the results.
 
 **You have successfully monitored proactive remediation execution.**
 
@@ -1029,7 +1031,7 @@ The Troubleshooting blade provides a consolidated view of a user's devices, poli
 
 1. Select that device from the list to open its device blade.
 
-1. Review:
+1. Below the **Essentials** section, select the **Device details** tab, and then review:
    - **Enrolled by**
    - **Last check-in time**
    - **Compliance**
@@ -1049,7 +1051,7 @@ In **Exercise 1 Task 5** you intentionally created two configuration profiles �
 
 1. You should still be on the device blade you opened at the end of **Task 1**. If not, navigate to **Devices** → **All devices** and reselect that same pilot-cohort device (**SEA-DEV1** or **SEA-DEV2**).
 
-1. In the device blade's left navigation, under **Monitor**, select **Device configuration**.
+1. In the device blade's left navigation, under **Reports**, select **Device configuration**.
 
 1. Review the **State** column. This report lists every policy assigned to the device (**Policy**, **Logged in user**, **Policy type**, **State**) with a real per-policy status — this is a cleaner, more direct view than the Troubleshoot blade's **Policy** tab, which doesn't show status at all.
 
@@ -1070,9 +1072,12 @@ In **Exercise 1 Task 5** you intentionally created two configuration profiles �
    - Select **WIN - Camera - Enabled (Pilot)**.
    - From the toolbar, select **Delete**, then select **OK** to confirm.
 
-1. Trigger a device sync (**Devices** → **All devices** → select the same device → **Sync**) and wait 2–5 minutes for the device to re-evaluate.
+1. Trigger a device sync (**Devices** → **All devices** → select the same device → **Sync**) and monitor the **Sync status** pane until the sync has completed.
 
 1. Return to the device's **Monitor** → **Device configuration** report and confirm `WIN - Camera - Disabled (Pilot)` now shows **State: Succeeded** (no longer **Conflict**), with the **Disabled** value applied.
+
+   > [!NOTE]
+   > It may require another sync of the device, and then a couple of minutes for Graph to return the correct state for the policy.
 
    > [!NOTE]
    > Alternative resolutions you could have used in production: (a) change one profile's assignment so the two no longer overlap on the same group; (b) move the conflicting setting out of one profile entirely; (c) use **Settings catalog precedence** by ordering policies (where supported). Deleting the loser is the simplest — but on a real fleet, audit who created each conflicting profile and why before deleting.
@@ -1087,7 +1092,7 @@ In **Exercise 1 Task 5** you intentionally created two configuration profiles �
 
 1. Select **Sync** from the device actions toolbar, then select **Yes**.
 
-1. Wait for the sync to complete (typically 1–2 minutes).
+1. Wait for the **Sync status** pane to indicate the sync is complete (typically 1–2 minutes).
 
 1. Refresh the page and verify the **Last check-in** timestamp updated.
 
@@ -1102,7 +1107,7 @@ In **Exercise 1 Task 5** you intentionally created two configuration profiles �
 
 The `CA - Require compliant device (Pharmacy pilot)` Conditional Access policy you created in **Exercise 2 Task 4** is running in **Report-only** mode — it doesn't enforce, but it does log what *would* have happened on every sign-in. You'll inspect those logs now to see the policy's impact before flipping it to **On** in **Lab 04 Exercise 6**.
 
-1. On the **Troubleshooting + support | Troubleshoot** page, with a pilot-cohort user selected (Megan Bowen or another `sg-Intune-Pilot-Users` member), scroll to the **Compliance** section.
+1. On the **Troubleshooting + support | Troubleshoot** page, with a pilot-cohort user selected (Megan Bowen or another `sg-Intune-Pilot-Users` member), observe the **Compliance** section.
 
 1. Note the user's device compliance state. A **Not compliant** or **Not evaluated** state means the CA policy in enforcement mode would block the sign-in.
 
@@ -1117,7 +1122,7 @@ The `CA - Require compliant device (Pharmacy pilot)` Conditional Access policy y
 
 1. Select any recent sign-in entry to open its **Activity details: Sign-ins** pane.
 
-1. Switch to the **Conditional Access** tab in the details pane. You should see `CA - Require compliant device (Pharmacy pilot)` listed with a **Result** of **Report-only: Success**, **Report-only: Failure**, **Report-only: Not applied**, **Report-only: User action required**, or **Not applied**.
+1. Switch to the **Report only** tab in the details pane. You should see `CA - Require compliant device (Pharmacy pilot)` listed with a **Result** of **Report-only: Success**, **Report-only: Failure**, **Report-only: Not applied**, **Report-only: User action required**, or **Not applied**.
 
    > [!NOTE]
    > **Report-only result decoder:**
@@ -1162,14 +1167,14 @@ In this lab, you accomplished the following:
 **Exercise 4: Configure Windows Update management**
 - Created a pilot update ring with no deferrals for early adopters (tagged with `Pharmacy`)
 - Created a standard update ring with 7-day quality and 14-day feature update deferrals
-- Created a Feature update profile pinning the fleet to Windows 11 24H2 (with the pilot cohort excluded so they run ahead)
+- Created a Feature update profile pinning the fleet to Windows 11 25H2 (with the pilot cohort excluded so they run ahead)
 - Created an Expedited Quality update policy for out-of-band security patches
 - Monitored Windows Update deployment status across devices
 
-**Exercise 5: Enable Endpoint analytics and proactive remediations**
+**Exercise 5: Enable Endpoint analytics and remediations**
 - Enabled Endpoint analytics to monitor device performance and user experience
 - Enabled Windows license verification, a tenant-level prerequisite for remediations
-- Created a proactive remediation script package to detect and clear old temp files
+- Created a remediation script package to detect and clear old temp files
 - Monitored remediation execution results
 
 **Exercise 6: Use the Troubleshooting blade**
@@ -1184,7 +1189,7 @@ In this lab, you accomplished the following:
 - Compliance policies with grace periods provide users time to remediate issues before access is blocked
 - Group Policy analytics helps plan on-premises-to-cloud migration by identifying supported settings
 - Windows Update rings enable phased rollouts with deferrals for stability
-- Endpoint analytics and proactive remediations enable proactive device management and issue resolution
+- Endpoint analytics and remediations enable proactive device management and issue resolution
 - The Troubleshooting blade consolidates device, policy, and app status for efficient troubleshooting
 
 **Next Steps:**

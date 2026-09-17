@@ -172,6 +172,9 @@ Endpoint Detection and Response policies onboard devices to Defender for Endpoin
    - **Sensor health state:** Active, Inactive, or Misconfigured
    - **Onboarding status:** Onboarded
 
+   > [!NOTE]
+   > After the devices have been onboarded, there will be a delay until the Risk and Exposure populate, this could be 30-60 minutes. 
+
 **You have successfully verified device onboarding to Microsoft Defender for Endpoint.**
 
 ---
@@ -204,14 +207,18 @@ Security baselines are pre-configured collections of recommended settings based 
 
    > [!NOTE]
    > The baseline includes settings for:
-   > - BitLocker encryption
-   > - Credential Guard
-   > - Application Guard
-   > - Attack Surface Reduction rules
-   > - Exploit protection
-   > - Network protection
+   > - Administrative Templates
+   > - BitLocker
+   > - Defender
+   > - Device Guard
+   > - Dma Guard
+   > - Firewall
+   > - Microsoft Edge
 
-1. Scroll through the categories and note the pre-configured values. You can customize individual settings, but for this lab, accept the defaults.
+1. Scroll through the categories and note the pre-configured values. You can customize individual settings, but for this lab, we will accept most of the defaults.
+
+1. In order to prevent a conflict with a later task in this lab, expand **Bitlocker** and configure:
+   -- **Allow Warning For Other Disk Encryption**: Disabled
 
 1. Select **Next**.
 
@@ -310,20 +317,20 @@ Firewall policies configure Windows Defender Firewall rules and behavior.
 
 1. Configure **Domain Network Firewall**:
    - **Enable Domain Network Firewall:** True (Default)
-   - **Disable Stealth Mode:** False (Default)
    - **Enable Log Success Connections:** Enable Logging Of Successful Connections
+   - **Disable Stealth Mode:** False (Default)
    - **Enable Log Dropped Packets:** Enable Logging Of Dropped Packets
 
 1. Configure **Private Network Firewall** and use the same settings as the Domain profile:
    - **Enable Private Network Firewall:** True (Default)
-   - **Disable Stealth Mode:** False (Default)
    - **Enable Log Success Connections:** Enable Logging Of Successful Connections
+   - **Disable Stealth Mode:** False (Default)
    - **Enable Log Dropped Packets:** Enable Logging Of Dropped Packets
 
 1. Configure **Public Network Firewall**:
    - **Enable Public Network Firewall:** True (Default)
-   - **Disable Stealth Mode:** False (Default)
    - **Default Inbound Action for Public Profile:** Block (Default)
+   - **Disable Stealth Mode:** False (Default)
    - **Enable Log Success Connections:** Enable Logging Of Successful Connections
    - **Enable Log Dropped Packets:** Enable Logging Of Dropped Packets
 
@@ -366,17 +373,17 @@ Attack Surface Reduction rules block behaviors commonly used by malware, such as
 
 1. On the **Configuration settings** tab, configure the following ASR rules **all in Block mode**:
 
-   - **Block executable content from email client and webmail:** Block
    - **Block all Office applications from creating child processes:** Block
+   - **Block credential stealing from the Windows local security authority subsystem:** Block
+   - **Block executable content from email client and webmail:** Block
+   - **Block execution of potentially obfuscated scripts:** Block
+   - **Block JavaScript or VBScript from launching downloaded executable content:** Block
    - **Block Office applications from creating executable content:** Block
    - **Block Office applications from injecting code into other processes:** Block
-   - **Block JavaScript or VBScript from launching downloaded executable content:** Block
-   - **Block execution of potentially obfuscated scripts:** Block
-   - **Block Win32 API calls from Office macros:** Block
-   - **Block credential stealing from the Windows local security authority subsystem:** Block
+   - **Block persistence through WMI event subscription:** Block
    - **Block process creations originating from PSExec and WMI commands:** Block
    - **Block untrusted and unsigned processes that run from USB:** Block
-   - **Block persistence through WMI event subscription:** Block
+   - **Block Win32 API calls from Office macros:** Block
 
 1. Select **Next**.
 
@@ -445,26 +452,22 @@ BitLocker encrypts the entire OS drive, protecting data at rest. You'll configur
 
 1. On the **Configuration settings** tab, expand **BitLocker** and configure:
    - **Require Device Encryption:** Enabled
-   - **Allow Warning for Other Disk Encryption:** Enabled
+   - **Allow Warning for Other Disk Encryption:** Disabled
 
 1. Expand **Fixed Data Drives** and configure:
    - **Enforce drive encryption type on fixed data drives:** Enable
    - **Choose how BitLocker-protected fixed drives can be recovered:** Enabled
    - **Save BitLocker recovery information to AD DS for operating system drives:** True
-   - **Do not enable BitLocker until recovery information is stored in AD DS for operating system drives:** True
+   - **Do not enable BitLocker until recovery information is stored to AD DS for fixed data drives:** True
 
 1. Expand **Operating System Drives** and configure:
-   - **Enforce drive encryption type on fixed data drives:** Enable
+   - **Enforce drive encryption type on operating system drives:** Enable
    - **Require additional authentication at startup:** Enabled
-   - **Configure TPM startup key:** Require startup key with TPM
-   - **Compatible TPM startup key and PIN:** Require startup key and PIN with TPM
-   - **Configure TPM startup:** Do not allow TPM
-   - **Configure TPM startup PIN:** Do not allow startup PIN with TPM
    - **Configure minimum PIN length for startup:** Enabled
    - **Minimum characters:** 6
    - **Choose how BitLocker-protected operating system drives can be recovered:** Enabled
    - **Save BitLocker recovery information to AD DS for operating system drives:** True
-   - **Configure user storage of BitLocker recovery information:** Require 48-digit recovery password
+   - **Do not enable BitLocker until recovery information is stored in AD DS for operating system drives:** True
 
    > [!NOTE]
    > Requiring TPM+PIN provides two-factor protection: something you have (TPM chip) + something you know (PIN). Recovery keys escrowed to Entra ID allow IT admins to retrieve keys when users forget their PIN.
@@ -483,10 +486,10 @@ BitLocker encrypts the entire OS drive, protecting data at rest. You'll configur
 
 ### Task 2: Monitor BitLocker encryption status
 
-1. On **SEA-DEV1**, wait 10–15 minutes for the BitLocker policy to apply.
+1. On **SEA-DEV1**, wait 10–15 minutes for the BitLocker policy to apply. You can force a sync from Intune to speed this up. 
 
    > [!NOTE]
-   > BitLocker encryption can take 1–3 hours to complete depending on drive size and system performance. For lab purposes, you'll verify the policy was applied and encryption started.
+   > BitLocker encryption can take 1–3 hours to complete depending on drive size and system performance. For lab purposes, you'll verify the policy was applied and encryption started. In our lab environment, it will take approximately 5-10 minutes. 
 
 1. On **SEA-DEV1**, open **Terminal (Admin)** (right-click Start → Terminal (Admin); Windows Terminal opens a PowerShell tab by default).
 
@@ -500,18 +503,19 @@ BitLocker encrypts the entire OS drive, protecting data at rest. You'll configur
 
 1. Review the output:
    - **Conversion Status:** Should show "Encryption in Progress" or "Fully Encrypted"
+   - **Percentage Encrypted:** Will show either 100.0% or a partial percentage
    - **Encryption Method:** XTS-AES 128 or XTS-AES 256
    - **Protection Status:** Protection On
    - **Lock Status:** Unlocked
 
 1. In the **Microsoft Intune admin center**, navigate to **Devices** → **All devices** → **SEA-DEV1**.
 
-1. Select **Recovery keys** from the left navigation.
+1. Select **Bitlocker recovery keys** from the left navigation.
 
 1. Verify the BitLocker recovery key for the C: drive is escrowed to Microsoft Entra ID.
 
    > [!NOTE]
-   > Recovery keys are stored in Entra ID and can be retrieved by Global Administrators or Helpdesk Administrators when a user forgets their BitLocker PIN.
+   > Recovery keys are stored in Entra ID and can be retrieved by Global Administrators or Helpdesk Administrators if a user forgets their BitLocker PIN.
 
    > [!NOTE]
    > **No BitLocker recovery key found for this device** message is expected at first. The key isn't escrowed until encryption starts (**Protection On**) *and* the device syncs afterward — with TPM+PIN this can lag 10–30 minutes.
@@ -616,7 +620,7 @@ Unlike the other VMs in this course, **LIN-SRV1** runs **Ubuntu Linux** with no 
    hostname -f
    ```
 
-   Note the internal IP/hostname (e.g., `192.168.1.100` or `LIN-SRV1.lab.local`). You'll reuse this endpoint value when you create the Tunnel Site (Task 2) and generate the certificate on LIN-SRV1 (Task 3). The gateway only needs **outbound** access to Microsoft Intune endpoints to register — no inbound ports, no public FQDN, and no publicly-trusted certificate are required for this lab.
+   Record the internal IP/hostname (e.g., `192.168.1.100` or `LIN-SRV1.lab.local`). You'll reuse this endpoint value when you create the Tunnel Site (Task 2). The gateway only needs **outbound** access to Microsoft Intune endpoints to register — no inbound ports, no public FQDN, and no publicly-trusted certificate are required for this lab.
 
 **You have successfully prepared the LIN-SRV1 server for Microsoft Tunnel installation.**
 
@@ -632,14 +636,14 @@ Create a **Server configuration** first. The Site wizard requires one, and if th
 
 1. Select the **Server configurations** tab.
 
-1. Select **Create new** and configure:
+1. Select **+ Create new** and configure:
    - **Name:** `Contoso Tunnel Server Config`
    - **IP address range:** `169.254.0.0/16`
    - **Server port:** `443`
    - **DNS servers:** Required. Enter `192.168.1.1`
    - Leave other settings at default for this lab.
 
-1. Select **Create**.
+1. Select **Next** until you reach the **Review + create** tab, and then select **Create**.
 
 1. Select the **Sites** tab.
 
@@ -652,7 +656,7 @@ Create a **Server configuration** first. The Site wizard requires one, and if th
 1. Select **Next**.
 
 1. On the **Settings** tab, configure:
-   - **Public IP address or FQDN:** `192.168.1.100`
+   - **Public IP address or FQDN:** `Recorded IP address from Task 1, Step 5`
    - **Server configuration:** Select `Contoso Tunnel Server Config`.
 
    > [!NOTE]
@@ -661,10 +665,10 @@ Create a **Server configuration** first. The Site wizard requires one, and if th
    > For this lab workflow, this field is used to satisfy Site configuration and certificate name matching. It does not validate real internet-reachable client ingress unless you explicitly test end-user tunnel connectivity from outside the lab network.
    >
    > Observed values from this lab run:
-   > - Certificate SAN includes `DNS:lin-srv1` and `IP:192.168.1.100`.
+   > - Certificate SAN includes `DNS:lin-srv1` and `Recorded IP address from Task 1, Step 5`.
    > - Site entry tested in the portal included `LIN-SRV1.lab.local`.
    >
-   > To avoid SAN mismatch, keep the Site endpoint as `192.168.1.100` unless you regenerate the cert to include `LIN-SRV1.lab.local`.
+   > To avoid SAN mismatch, keep the Site endpoint as `Recorded IP address from Task 1, Step 5` unless you regenerate the cert to include `LIN-SRV1.lab.local`.
 
 1. Select **Next** until you reach the **Review + create** tab, and then select **Create**.
 
@@ -725,12 +729,12 @@ With the Server configuration and Site in place, install the Tunnel Gateway on t
 
 1. Follow the installation prompts:
    - Accept the license terms 
-       - Press **Space** to scroll through the license agreement and enter **yes** at the prompt to accept.
-   - When prompted for additional Admin Tasks and certificate verification, enter **yes** (the certificate files are already staged from the previous step).
+       - Press **Space** to scroll through the license agreement and enter **`yes`** at the prompt to accept.
+   - When prompted for additional Admin Tasks and certificate verification, enter **`yes`** (the certificate files are already staged from the previous step).
      
       ![Screenshot of the LIN-SRV1 terminal displaying the Microsoft Tunnel setup Admin Tasks prompt for installing the TLS certificate.](media/tunnel-setup-admin-tasks.png)
    
-   - The setup process will ask you to complete a device login. Note the **Device Code** in the terminal and switch back to SEA-DEV1 and open a browser to https://microsoft.com/devicelogin. Enter the **Device Code** you saved earlier and authenticate with the admin account.
+   - The setup process will ask you to complete a device login. Record the **Device Code** displayed in the terminal and switch back to SEA-DEV1 and open a browser to https://microsoft.com/devicelogin. Enter the **Device Code** you saved earlier and authenticate with the admin account.
 
      ![Screenshot of the LIN-SRV1 terminal showing the device code used to authenticate the Microsoft Tunnel Gateway agent at microsoft.com/devicelogin.](media/tunnel-setup-device-code.png)
 
@@ -745,7 +749,10 @@ With the Server configuration and Site in place, install the Tunnel Gateway on t
     sudo mst-cli agent status
    ```
 
-    The output should show the server and agent as **running** and **healthy**.
+    Wait until the output shows the server and agent as **running** and **healthy**. 
+
+> [!TIP]
+> You can use the UP ARROW key to re-run the commands to check server and agent status.
 
 **You have successfully installed Microsoft Tunnel Gateway on LIN-SRV1.**
 
@@ -831,7 +838,7 @@ With the Server configuration and Site in place, install the Tunnel Gateway on t
 
 ### Scenario
 
-Microsoft Cloud PKI (part of the Intune Suite) provides a cloud-hosted certificate authority for issuing certificates to devices and users. You'll create a root CA, an issuing CA anchored to it, and a SCEP certificate profile for device authentication (e.g., for Wi-Fi, VPN, or S/MIME encryption). With the Suite trial active (from **Lab 01** prerequisites), this exercise is fully hands-on.
+Microsoft Cloud PKI (part of the Intune Suite and Microsoft 365 E5) provides a cloud-hosted certificate authority for issuing certificates to devices and users. You'll create a root CA, an issuing CA anchored to it, and a SCEP certificate profile for device authentication (e.g., for Wi-Fi, VPN, or S/MIME encryption). With the Suite trial active (from **Lab 01** prerequisites) or an E5 license, this exercise is fully hands-on.
 
 ### Task 1: Create a root Certificate Authority
 
@@ -898,6 +905,8 @@ Issuing CAs are subordinate to a root CA and they're what your devices actually 
    - **Root CA:** Select **Contoso Root CA** (the root you created in Task 1)
    - **Validity period:** 10 years (allowed: 2, 4, 6, 8, or 10 — must be less than or equal to the root CA's remaining lifetime)
 
+
+
 1. Under **Extended Key Usages**, the picker is constrained to EKUs you defined on the root in Task 1. Confirm **Client Auth** and **Server Auth** are selected.
 
 1. Under **Subject attributes**, enter:
@@ -924,6 +933,8 @@ Issuing CAs are subordinate to a root CA and they're what your devices actually 
 1. Under **Properties**, select **Download certificate** and save the file as `ContosoRootCA.cer`.
 
 1. Return to the **Cloud PKI** page and select **Contoso Issuing CA**.
+
+1. Under **Properties**, record the value for **SCEP URI**, you will use this in Task 5.
 
 1. Under **Properties**, select **Download certificate** and save the file as `ContosoIssuingCA.cer`.
 
@@ -1011,7 +1022,7 @@ SCEP (Simple Certificate Enrollment Protocol) profiles allow devices to request 
    - **Root Certificate:** Select **+ Root Certificate** and then select **Trusted Cert - Contoso Root CA**
    - **Extended key usage:** Enter `Client Authentication` for **Name** and select **Client Authentication (1.3.6.1.5.5.7.3.2)** for **Predefined values**.
    - **Renewal threshold (%):** 20
-   - **SCEP Server URLs:** Paste the **SCEP URI** copied from the issuing CA (**Tenant administration** → **Cloud PKI** → **Contoso Issuing CA** → **Properties** → **SCEP URI**). This field isn't auto-populated — it's required and shows a validation error until you provide it.
+   - **SCEP Server URLs:** Paste the **SCEP URI** you recorded in Task 3
 
 1. Select **Next**.
 
@@ -1029,7 +1040,7 @@ SCEP (Simple Certificate Enrollment Protocol) profiles allow devices to request 
 
 ### Task 6: Verify certificate enrollment on SEA-DEV1
 
-1. On **SEA-DEV1**, wait 10–15 minutes for the SCEP profile to apply and the certificate to be issued.
+1. On **SEA-DEV1**, wait 10–15 minutes for the SCEP profile to apply and the certificate to be issued. You can sync the device to speed this up.
 
 1. Open **Terminal (Admin)** (Windows Terminal opens a PowerShell tab by default) and run:
 
@@ -1169,7 +1180,7 @@ In this lab, you accomplished the following:
 - Observed endpoint security policy precedence and conflict surfacing
 
 **Exercise 3: Configure BitLocker encryption**
-- Created a BitLocker policy requiring TPM+PIN protection (tagged `Pharmacy`)
+- Created a BitLocker policy requiring TPM and allowing PIN protection (tagged `Pharmacy`)
 - Configured recovery key escrow to Microsoft Entra ID
 - Verified encryption status and retrieved recovery keys
 
@@ -1201,7 +1212,7 @@ In this lab, you accomplished the following:
 - Flipping a Conditional Access policy from **Report-only** to **On** is a deliberate two-step process: rehearse with **What If**, verify the break-glass exclusion, then switch
 
 **Next Steps:**
-In Lab 05, you'll automate endpoint management using Microsoft Graph PowerShell, deploy proactive remediations, configure RBAC with scope tags, and use reporting and monitoring tools.
+In Lab 05, you'll automate endpoint management using Microsoft Graph PowerShell, deploy remediations, configure RBAC with scope tags, and use reporting and monitoring tools.
 
 ---
 

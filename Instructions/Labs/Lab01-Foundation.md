@@ -493,14 +493,21 @@ Microsoft Entra ID roles (Task 1–5) delegate Entra-level permissions. Intune i
 
 1. On the **Permissions** page, select **Yes** for the following permissions (leave everything else **No** — this is principle of least privilege). Portal labels group permissions into categories like **Managed devices**, **Remote tasks**, **Organization**, and **Roles**. Match the closest available labels in your portal:
 
-   - **Managed devices:** Read, Set primary user, Update
-   - **Organization:** Read
-   - **Remote Help app**: Take full control, View screen
-   - **Remote tasks:** Sync devices, Restart now (or Reboot now), Collect diagnostics
-   - **Roles:** Read
+   - **Device compliance policies**, **Device configurations**, **Endpoint Protection Reports**, **Managed apps**, **Mobile apps**, **Security baselines:** 
+      - Read = **Yes**
+      - Create, Update, Delete, and Assign = **No**
+   - **Managed devices:** 
+      - Update, Set primary user, Read = **Yes**
+      - Delete and Wipe = **No**
+   - **Organization:** Read = **Yes**
+   - **Roles:** Read = **Yes**
+   - **Remote Help app**:
+      - Take full control, View screen = **Yes**; 
+   - **Remote tasks:** 
+      - Collect diagnostics, Reboot now, Sync devices = **Yes**
 
    > [!IMPORTANT]
-   > Leave **all** permissions on **Apps**, **Device compliance policies**, **Device configurations**, **Endpoint protection**, **Enrollment programs**, and **Policy sets** set to **No**. The Pharmacy Helpdesk should be able to act on devices but **not** author or modify any policy. This is the upper-intermediate delegation pattern: a narrow remote-action role layered on top of broad read.
+   > The Pharmacy Helpdesk should be able to act on devices but **not** author or modify any policy. This is the upper-intermediate delegation pattern: a narrow remote-action role layered on top of broad read.
 
 1. Select **Next**.
 

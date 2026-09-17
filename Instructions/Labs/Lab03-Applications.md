@@ -169,7 +169,7 @@ Win32 apps are traditional Windows desktop applications (.exe, .msi installers).
 1. Note the exact downloaded filename (it changes with each 7-Zip release, e.g. `7z2408-x64.msi`) — you'll need it for the next command.
 
    > [!NOTE]
-   > This lab uses `7z-portable.exe` as the example payload. If you use a different installer (for example, Notepad++ `npp.8.9.7.Installer.x64.exe`), substitute the **filename**, **app name/publisher**, **install/uninstall commands**, and **detection path** consistently throughout Exercises 2, 5, and 7.
+   > This lab uses `7z-*.exe` as the example payload. If you use a different installer (for example, Notepad++ `npp.8.9.7.Installer.x64.exe`), substitute the **filename**, **app name/publisher**, **install/uninstall commands**, and **detection path** consistently throughout Exercises 2, 5, and 7.
 
 1. Navigate to the Win32 Content Prep Tool directory:
 

@@ -1,7 +1,7 @@
 ---
 lab:
    title: 'Lab 05: Automate and operate'
-   description: 'In this lab, you use Microsoft Graph PowerShell for device management, deploy proactive remediations, configure role-based access control with scope tags, review audit logs, and use built-in Intune reports.'
+   description: 'In this lab, you use Microsoft Graph PowerShell for device management, deploy remediations, configure role-based access control with scope tags, review audit logs, and use built-in Intune reports.'
    duration: 100 minutes
    level: 200
    islab: true
@@ -16,13 +16,13 @@ lab:
 
 ## Lab scenario
 
-You are **Jordan Chen**, Modern Endpoint Administrator at Contoso Healthcare. With your Intune environment fully deployed (devices enrolled, apps deployed, security policies configured), you now need to implement automation and operational excellence practices. You'll use Microsoft Graph PowerShell for scripted device management, deploy proactive remediations, implement role-based access control (RBAC) with scope tags for delegated administration, configure audit logging, and leverage built-in reporting for operational insights.
+You are **Jordan Chen**, Modern Endpoint Administrator at Contoso Healthcare. With your Intune environment fully deployed (devices enrolled, apps deployed, security policies configured), you now need to implement automation and operational excellence practices. You'll use Microsoft Graph PowerShell for scripted device management, deploy remediations, implement role-based access control (RBAC) with scope tags for delegated administration, configure audit logging, and leverage built-in reporting for operational insights.
 
 By the end of this lab, you'll have:
 - Registered an app in Microsoft Entra ID for unattended Graph API automation
 - Authenticated with Microsoft Graph PowerShell SDK
 - Queried managed devices and policies using Graph API — including filtering by the `Pharmacy` scope tag
-- Deployed a proactive remediation script package using a **pilot-first** rollout pattern
+- Deployed a remediation script package using a **pilot-first** rollout pattern
 - Assigned the **`Pharmacy Helpdesk`** custom role (created in **Lab 01 Exercise 2 Task 6**) to a delegated administrator (**Lee Gu**) and verified end-to-end scope behavior across all Pharmacy-scoped objects created in Labs 02–04
 - Reviewed audit logs for admin activity tracking, including Conditional Access policy edits, compliance policy changes, and scope-tag operations
 - Used built-in reports to export device and compliance data
@@ -62,10 +62,11 @@ Microsoft Graph is a REST API that provides programmatic access to Microsoft 365
 
 1. On the **Do you want to allow this app to make changes to your device?** prompt, select **Yes**.
 
-1. Install the Microsoft Graph PowerShell SDK:
+1. Install the Microsoft Graph PowerShell SDK for the v1.0 and beta versions:
 
    ```powershell
    Install-Module Microsoft.Graph -Scope AllUsers -Force
+   Install-Module Microsoft.Graph.Beta -Scope AllUsers -Force
    ```
 
    > [!NOTE]
@@ -242,12 +243,11 @@ For interactive automation, you can use delegated permissions (user signs in). F
 1. Query the configuration profiles tagged with the `Pharmacy` scope tag (created in **Lab 01 Exercise 2 Task 6** and applied to profiles in **Labs 02–04**). This is the canonical Graph-PowerShell way to enumerate everything a delegated admin (Pharmacy Helpdesk) would see.
 
    > [!NOTE]
-   > The `roleScopeTags` collection is exposed only via the **beta** Graph endpoint at the time of writing, so this lookup uses `Invoke-MgGraphRequest` directly rather than a typed `Get-Mg*` cmdlet:
+   > The `roleScopeTags` collection is exposed only via the **beta** Graph version at the time of writing, so this lookup uses a `Get-MgBeta*` cmdlet:
 
    ```powershell
-   # Resolve the Pharmacy scope tag's numeric ID via the beta endpoint
-   $tagsResp = Invoke-MgGraphRequest -Method GET -Uri 'https://graph.microsoft.com/beta/deviceManagement/roleScopeTags'
-   $pharmacyTag = $tagsResp.value | Where-Object { $_.displayName -eq 'Pharmacy' }
+   # Resolve the Pharmacy scope tag's numeric ID via the beta version
+   $pharmacyTag = Get-MgBetaDeviceManagementRoleScopeTag -Filter "DisplayName eq 'Pharmacy'"
    if ($pharmacyTag) {
        Write-Output "Pharmacy scope tag ID: $($pharmacyTag.id)"
    } else {
@@ -255,13 +255,13 @@ For interactive automation, you can use delegated permissions (user signs in). F
    }
 
    # List all device configuration profiles that include the Pharmacy scope tag
-   Get-MgDeviceManagementDeviceConfiguration -All |
-       Where-Object { $_.AdditionalProperties.roleScopeTagIds -contains $pharmacyTag.id } |
+   Get-MgBetaDeviceManagementDeviceConfiguration -All |
+       Where-Object { $_.roleScopeTagIds -contains $pharmacyTag.id } |
        Select-Object DisplayName, Id
 
    # List all compliance policies tagged Pharmacy
-   Get-MgDeviceManagementDeviceCompliancePolicy -All |
-       Where-Object { $_.AdditionalProperties.roleScopeTagIds -contains $pharmacyTag.id } |
+   Get-MgBetaDeviceManagementDeviceCompliancePolicy -All |
+       Where-Object { $_.roleScopeTagIds -contains $pharmacyTag.id } |
        Select-Object DisplayName, Id
    ```
 
@@ -322,7 +322,7 @@ You'll create a Windows compliance policy using the Graph API (instead of the In
 1. Verify the policy was created:
 
    ```powershell
-   Get-MgDeviceManagementDeviceCompliancePolicy | Where-Object { $_.DisplayName -eq "Graph API - Windows Compliance Policy" } | Select-Object DisplayName, Description, Id
+      Get-MgDeviceManagementDeviceCompliancePolicy | Where-Object { $_.DisplayName -eq "Graph API - Windows Compliance Policy" } | Select-Object DisplayName, Description, Id
    ```
 
 **You have successfully created a compliance policy using the Microsoft Graph API.**
@@ -345,7 +345,7 @@ You'll create a Windows compliance policy using the Graph API (instead of the In
    $groupId = $group.Id
    ```
 
-1. Create the assignment JSON payload. Note the `assignments` array wrapper \u2014 the `/assign` action accepts a collection, not a single assignment object:
+1. Create the assignment JSON payload. Note the `assignments` array wrapper - the `/assign` action accepts a collection, not a single assignment object:
 
    ```powershell
    $assignmentJson = @"
@@ -378,11 +378,11 @@ You'll create a Windows compliance policy using the Graph API (instead of the In
 
 ---
 
-## Exercise 2: Deploy proactive remediations
+## Exercise 2: Deploy remediations
 
 ### Scenario
 
-Proactive remediations automatically detect and fix common device issues before users report them. The upper-intermediate pattern for any new remediation script is a **pilot-first rollout**: deploy to the pilot cohort, watch for detection-vs-remediation outcomes for a day or two, then expand to the broader fleet. You'll follow that pattern here — the same pilot group (`sg-Intune-Pilot-Users`) that received the blocking ESP (Lab 01), the Pilot update ring (Lab 02), and Block-mode ASR (Lab 04) gets the new remediation first.
+Premediations automatically detect and fix common device issues before users report them. The upper-intermediate pattern for any new remediation script is a **pilot-first rollout**: deploy to the pilot cohort, watch for detection-vs-remediation outcomes for a day or two, then expand to the broader fleet. You'll follow that pattern here — the same pilot group (`sg-Intune-Pilot-Users`) that received the blocking ESP (Lab 01), the Pilot update ring (Lab 02), and Block-mode ASR (Lab 04) gets the new remediation first.
 
 ### Task 1: Create detection and remediation scripts
 
@@ -429,6 +429,7 @@ Proactive remediations automatically detect and fix common device issues before 
    "@ | Out-File -FilePath "C:\LabScripts\Remediations\Remediate-StaleWindowsUpdateCache.ps1" -Encoding UTF8
    ```
 
+
 **You have successfully created detection and remediation scripts.**
 
 ---
@@ -438,10 +439,6 @@ Proactive remediations automatically detect and fix common device issues before 
 1. In **Microsoft Edge**, navigate to **https://intune.microsoft.com**.
 
 1. Sign in as **admin@<TenantPrefix>.onmicrosoft.com**.
-
-1. Navigate to **Tenant administration** → **Connectors and tokens** → **Windows data**.
-
-1. Expand **Windows data** and set **Enable features that require Windows diagnostic data in processor configuration** to **On**. Expand **Windows license verification** and set **I confirm that my tenant owns one of these licenses** to **On**.
 
 1. In the **Microsoft Intune admin center**, select **Devices**, and then select **Scripts and remediations**.
 
@@ -474,7 +471,7 @@ Proactive remediations automatically detect and fix common device issues before 
 
 1. Select **Next** → **Create**.
 
-**You have successfully uploaded the proactive remediation script package and assigned it to the pilot cohort.**
+**You have successfully uploaded the remediation script package and assigned it to the pilot cohort.**
 
 ---
 
@@ -494,7 +491,7 @@ Proactive remediations automatically detect and fix common device issues before 
    - **Remediation status:** Shows whether the remediation succeeded (exit code 0) or failed (exit code 1)
    - **Last check-in:** Timestamp of last script execution
 
-**You have successfully deployed and monitored a proactive remediation script.**
+**You have successfully deployed and monitored a remediation script.**
 
 ---
 
@@ -536,12 +533,18 @@ This is the culmination of Thread A across the whole lab series. By the end of t
 1. Select **Edit** next to **Permissions**.
 
 1. Review the **Permissions** tab. Confirm the permissions are set correctly:
-   - **Managed devices:** Read, Set primary user, Update = **Yes**; Delete and Wipe = **No**
-   - **Remote tasks:** Sync devices, Reboot now, Collect diagnostics = **Yes**
+   - **Device compliance policies**, **Device configurations**, **Endpoint Protection Reports**, **Managed apps**, **Mobile apps**, **Security baselines:** 
+      - Read = **Yes**
+      - Create, Update, Delete, and Assign = **No**
+   - **Managed devices:** 
+      - Update, Set primary user, Read = **Yes**
+      - Delete and Wipe = **No**
    - **Organization:** Read = **Yes**
    - **Roles:** Read = **Yes**
-   - **Device compliance policies**, **Device configurations**, **Managed apps**, **Mobile apps**, **Endpoint Protection Reports**, **Security baselines:** Read = **Yes**; Create, Update, Delete, and Assign = **No**
-   - **Remote Help app**: Take full control = **Yes**; View screen = **Yes**; 
+   - **Remote Help app**:
+      - Take full control, View screen = **Yes**; 
+   - **Remote tasks:** 
+      - Collect diagnostics, Reboot now, Sync devices = **Yes**
 
    > [!NOTE]
    > This is the principle-of-least-privilege role you defined in Lab 01: enough to operate devices day-to-day, but no authority to change policy. The Pharmacy Helpdesk can sync a device, force a restart, or collect diagnostics — but can't author or delete the compliance policy that says "BitLocker must be on."
@@ -564,7 +567,7 @@ Before assigning the role, confirm which objects Lee Gu will gain visibility to.
 
 1. Navigate to **Devices** → **Manage devices** → **Compliance**. Confirm `Compliance - Windows Security Baseline` shows **Pharmacy**.
 
-1. Navigate to **Apps** → **All apps**. Select `7-Zip Portable` and `7-Zip Portable v2.0` (or your custom portable apps) and select **Properties**. Confirm the **Scope tags** section shows **Pharmacy**.
+1. Navigate to **Apps** → **All apps**. Select `7-Zip (x64)` and `7-Zip v2.0` (or your custom apps) and select **Properties**. Confirm the **Scope tags** section shows **Pharmacy**.
 
 1. Navigate to **Endpoint security**. Select each option separately: **Security baselines**, **Antivirus**, **Attack surface reduction**, and **Disk encryption**. Confirm `Security Baseline - Defender for Endpoint`, `Antivirus - Defender Configuration`, `ASR - Block (Pilot)`, and the `BitLocker - Full Disk Encryption` policy all have **Pharmacy** listed in their **Scope tags**.
 
@@ -646,14 +649,13 @@ This is the moment of truth for Thread A. You'll sign in as Lee Gu and confirm t
 
 1. Navigate to **Devices** → **Manage devices** → **Compliance**. Confirm `Compliance - Windows Security Baseline` is visible; no other compliance policies appear.
 
-1. Navigate to **Apps** → **All apps**. Confirm `7-Zip Portable` and `7-Zip Portable v2.0` (or your custom portable apps) are visible; Microsoft 365 Apps, Microsoft To Do, Google Chrome (Default-tagged) do **not** appear.
+1. Navigate to **Apps** → **All apps**. Confirm `7-Zip (x64)` and `7-Zip v2.0` (or your custom apps) are visible; Microsoft 365 Apps, Microsoft To Do, Google Chrome (Default-tagged) do **not** appear.
 
 1. Navigate to **Endpoint security** → **Security baselines** / **Antivirus** / **Attack surface reduction** / **Disk encryption**. Confirm only the Pharmacy-tagged policies are visible.
 
 1. Try to **edit** the `Antivirus - Defender Configuration` policy:
    - Open the policy.
-   - Scroll to **Properties** → attempt to select **Edit** on the Settings section.
-   - The Edit button should be grayed out, unavailable, or selecting it returns an authorization error. Lee Gu's role grants **Read** on compliance policies but not **Create/Update/Delete**.
+   - Scroll to **Properties** → the Edit button is not visible. Lee Gu's role grants **Read** on policies but not **Create/Update/Delete**.
 
    > [!NOTE]
    > **You've just proven that Lee Gu can see and audit Pharmacy clinical policies, sync devices, and run remote tasks — but cannot edit or delete policy.** That's exactly the upper-intermediate delegation pattern: scoped visibility + bounded write authority. The Pharmacy Helpdesk handles day-to-day device operations; central IT (Jordan Chen, Global Admin) retains policy authorship.
@@ -687,11 +689,13 @@ Audit logs track administrative actions in Intune, providing accountability and 
    - Use the **Date range** picker to filter by time period
 
 1. Select an audit log entry to view detailed information:
-   - **Properties:** JSON payload showing before/after state (for Update actions)
-   - **Actor:** UPN and IP address of the user who performed the action
+   - **Activity / Activity Status:** The activity name and whether or not it was successful
+   - **Initiated By (Actor):** UPN of the user who performed the action
+   - **Target:** The item being affected / referred to
+   - **Modified Properties:** The old and new values for all changed items
 
    > [!NOTE]
-   > Audit logs are retained for 30 days in Intune. For long-term retention, export logs to Azure Monitor or a SIEM system.
+   > Audit logs are retained for 2 years days in Intune. For longer term retention, export logs to Azure Monitor or a SIEM system.
 
 **You have successfully reviewed Intune audit logs.**
 
@@ -747,13 +751,13 @@ Audit logs are how you reconstruct "who changed what, when, and why" — the bed
    - **Date:** In the **Date** filter, set **Start** and **End** to cover the last 7 days, then select **Apply**
    - **Activity:** In the **Activity** search box, enter `Create` and select the relevant creation activities (for example, **Create DeviceCompliancePolicy** or **Create DeviceAndAppManagementRoleAssignment**) to find policy/role creation events, then select **Apply**
 
-1. Locate the audit log entry for **Pharmacy Helpdesk** custom role creation (from **Lab 01 Exercise 2 Task 6**). Select it and review the **Properties** → JSON payload showing the role's permission grants.
+1. Locate the audit log entry for **Pharmacy Helpdesk** custom role creation (Create RoleDefinition) from **Lab 01 Exercise 2 Task 6**. Select it and review the **Properties** showing the role's permission grants.
 
-1. Locate the audit log entry for **Compliance - Windows Security Baseline** creation (from **Lab 02 Exercise 2 Task 1**). Note the **Initiated by** field shows your Global Admin account and the **Target** shows the Compliance - Windows Security Baseline policy.
+1. Locate the audit log entry for **Compliance - Windows Security Baseline** creation (Create DeviceCompliancePolicy) from **Lab 02 Exercise 2 Task 1**. Note the **Initiated by (Actor)** field shows your Global Admin account and the **Target** shows the Compliance - Windows Security Baseline policy.
 
-1. Locate the audit log entry for the **Pharmacy Helpdesk → Lee Gu** role assignment (just created in **Exercise 3 Task 3** of this lab). Confirm the assignment payload includes the **Pharmacy** scope tag and the **dyn-Windows-Devices** group.
+1. Locate the audit log entry for the **Pharmacy Helpdesk → Lee Gu** role assignment (Create DeviceAndAppManagementRoleAssignment) just created in **Exercise 3 Task 3** of this lab. Confirm the activity details includes the **Pharmacy** scope tag and the **dyn-Windows-Devices** group.
 
-1. Locate the audit log entry where you **deleted** `WIN - Camera - Enabled (Pilot)` to resolve the conflict in **Lab 02 Exercise 6 Task 2**. The activity will be **Delete deviceConfiguration**. The Properties pane includes the deleted object's last-known state — useful for rollback decisions.
+1. Locate the audit log entry where you **deleted** `WIN - Camera - Enabled (Pilot)` to resolve the conflict in **Lab 02 Exercise 6 Task 2**. The activity will be **Delete DeviceManagementConfigurationPolicy**. The activity details includes the deleted object's last-known state — useful for rollback decisions.
 
 1. Switch to the **Microsoft Entra admin center** at **https://entra.microsoft.com**. Navigate to **Monitoring & health** → **Audit logs** (the Entra audit log, distinct from Intune's).
 
@@ -761,7 +765,9 @@ Audit logs are how you reconstruct "who changed what, when, and why" — the bed
    - **Service:** Conditional Access
    - **Date:** Last 7 days
 
-1. Locate the entry where you **switched** `CA - Require compliant device (Pharmacy pilot)` from **Report-only** to **On** (from **Lab 04 Exercise 6 Task 3**). The Properties show the policy's state change.
+1. Locate the entry where you **switched** `CA - Require compliant device (Pharmacy pilot)` from **Report-only** to **On** from **Lab 04 Exercise 6 Task 3**. The **Category** will be **Policy**, the **Activity** will be **Update conditional access policy**. 
+
+1. In the **Audit Log Details** pane, select the **Modified Properties** tab, and then select **Click here to view changes to the Conditional Access policy (Preview)** for an easier-to-read visualization of the differences in the underlying JSON.
 
    > [!NOTE]
    > **Two separate audit logs.** Intune-specific actions (compliance, configuration, app, RBAC, scope tag) live in the **Intune audit log** under **Tenant administration**. Conditional Access policies, Entra role assignments, and directory operations live in the **Entra audit log** under **Identity → Monitoring & health**. When you investigate a real incident, you usually need both.
@@ -782,18 +788,19 @@ Intune provides built-in reports for devices, compliance, configuration, applica
 
 1. Select the **Reports** tab, then select **Noncompliant devices and settings**.
 
-1. Select **Generate report** (or **Run report** if previously generated).
+1. Select **Generate report** (or **Generate again** if previously generated).
 
 1. Review the report data:
    - **Device name**
-   - **Primary User principal name**
+   - **Noncompliant setting**
    - **Setting compliance state**
-   - **Last check-in**
+   - **Primary User principal name**
    - **Operating system**
+   - **Last check-in**
 
 1. Use the **Filter** option to narrow results (e.g., filter by OS = Windows).
 
-1. Select **Export**, then select **Yes** to download the report as CSV.
+1. Select **Export**, then select **Yes** to download the report as ZIP file that contains the CSV.
 
 **You have successfully generated and exported a device compliance report.**
 
@@ -825,8 +832,8 @@ Intune provides built-in reports for devices, compliance, configuration, applica
 
 1. Review the **Tenant status** dashboard:
    - **Tenant details:** total enrolled devices, licensed users, and Intune licenses
-   - **Service health and message center:** Shows active incidents or advisories affecting Intune
    - **Connector status:** Shows health of connectors (Defender for Endpoint, Microsoft Tunnel, etc.)
+   - **Service health and message center:** Shows active incidents or advisories affecting Intune
 
 1. Locate **Service health** to view detailed incident information.
 
@@ -850,7 +857,7 @@ In this lab, you accomplished the following:
 - Queried managed devices using Graph PowerShell
 - Created and assigned a compliance policy using Graph API
 
-**Exercise 2: Deploy proactive remediations**
+**Exercise 2: Deploy remediations**
 - Created detection and remediation PowerShell scripts
 - Uploaded a remediation script package to Intune and assigned to the pilot cohort
 - Monitored remediation execution on pilot devices
@@ -876,7 +883,7 @@ In this lab, you accomplished the following:
 **Key Takeaways:**
 - Microsoft Graph PowerShell enables scripted automation for bulk operations, reporting, and scope-tag-aware queries (`roleScopeTagIds` is the underlying property)
 - Application permissions and client secrets allow unattended automation without user interaction
-- Proactive remediations detect and fix common issues before users report problems; pilot-first rollout is the canonical pattern
+- Remediations detect and fix common issues before users report problems; pilot-first rollout is the canonical pattern
 - Custom RBAC roles + scope tags + group scope = the three dimensions of Intune delegated administration; the role's permissions intersect with the scope tag and the group target to produce the final visibility a delegated admin sees
 - Pharmacy Helpdesk → Lee Gu is the end-to-end demonstration: a role created on day one (Lab 01) gates visibility across every policy created in Labs 02–04, with no further configuration needed in Lab 05
 - Intune and Entra each have their own audit log — reach for both when investigating an incident or change

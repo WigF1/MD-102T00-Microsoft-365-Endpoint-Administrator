@@ -262,9 +262,6 @@ Dynamic groups automatically update membership based on user attributes. You'll 
 1. On the group's **Overview** page, in the **Feed** section, locate the **Dynamic rules processing status** card and verify it shows **Succeeded**.
 
    > [!NOTE]
-   > Membership evaluation can take 5–15 minutes. Expect four members, such as Johanna Lorenz and Lidia Holloway. Lab User2 isn't included because it has no usage location set.
-
-   > [!NOTE]
    > The processing status card will not update asynchronously, either refresh the page or select **Members** and then select **Overview** to cause the card to be updated.
 
 1. Select the **Members** tab to view group members.

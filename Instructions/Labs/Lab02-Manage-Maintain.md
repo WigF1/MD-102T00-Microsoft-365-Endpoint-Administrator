@@ -91,9 +91,9 @@ The Settings Catalog provides access to thousands of individual settings across 
 
 1. On the **Configuration settings** tab, select **+ Add settings**.
 
-1. In the settings picker, search for `power`.
+1. In the settings picker, under **Browse by category**, scroll down and select **Power**.
 
-1. Expand **Power** and check the following settings:
+1. In the lower pane, select the checkbox for the following settings:
    - **Unattended Sleep Timeout Plugged In**
    - **Unattended Sleep Timeout On Battery**
 

@@ -951,7 +951,7 @@ In **Exercise 1 Task 5** you intentionally created two configuration profiles �
 
 1. You should still be on the device blade you opened at the end of **Task 1**. If not, navigate to **Devices** → **All devices** and reselect that same pilot-cohort device (**SEA-DEV1** or **SEA-DEV2**).
 
-1. In the device blade's left navigation, under **Monitor**, select **Device configuration**.
+1. In the device blade's left navigation, under **Reports**, select **Device configuration**.
 
 1. Review the **State** column. This report lists every policy assigned to the device (**Policy**, **Logged in user**, **Policy type**, **State**) with a real per-policy status — this is a cleaner, more direct view than the Troubleshoot blade's **Policy** tab, which doesn't show status at all.
 
@@ -974,7 +974,7 @@ In **Exercise 1 Task 5** you intentionally created two configuration profiles �
 
 1. Trigger a device sync (**Devices** → **All devices** → select the same device → **Sync** → **Yes**). Wait a few minutes for the device to check in.
 
-1. Return to the device's **Monitor** > **Device configuration** report and confirm `WIN - Camera - Disabled (Pilot)` now shows **State: Succeeded** (no longer **Conflict**), with the **Disabled** value applied.
+1. Return to the device's **Reports** > **Device configuration** report and confirm `WIN - Camera - Disabled (Pilot)` now shows **State: Succeeded** (no longer **Conflict**), with the **Disabled** value applied.
 
    > [!NOTE]
    > You may need another device sync and a few minutes before the policy state updates.

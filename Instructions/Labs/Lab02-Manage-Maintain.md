@@ -987,9 +987,9 @@ In **Exercise 1 Task 5** you intentionally created two configuration profiles â€
 
 1. On the **Troubleshooting + support | Troubleshoot** page (with Megan Bowen selected), in the **Devices** tab, select **SEA-DEV1**.
 
-1. Select **Sync** from the device actions toolbar, then select **Yes**.
+1. Select **Sync** from the device actions toolbar, then select **Sync device**.
 
-1. Wait a few minutes for the device to check in. The sync request isn't instant; the device has to receive it and report back.
+1. Wait until the **Sync status** pane shows completed for all tasks. This may take a couple of minutes, do not close it.
 
 1. Refresh the page and verify the **Last check-in** timestamp updated.
 

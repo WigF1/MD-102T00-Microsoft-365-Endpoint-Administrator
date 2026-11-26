@@ -494,17 +494,12 @@ BitLocker encrypts the entire OS drive, protecting data at rest. You'll configur
 
 1. Verify the BitLocker recovery key for the C: drive is escrowed to Microsoft Entra ID.
 
-   > [!NOTE]
-   > **No BitLocker recovery key found for this device** is expected at first. The key can lag 10–30 minutes after encryption starts and the device syncs.
 
 **You have successfully monitored BitLocker encryption status and verified recovery key escrow.**
 
 ---
 
 ### Task 3: Retrieve a BitLocker recovery key
-
-> [!NOTE]
-> If no recovery key appears, skip this task and continue with **Exercise 4**. Return after BitLocker starts encrypting and the key appears on the **Recovery keys** blade.
 
 1. In the **Microsoft Intune admin center**, navigate to **Devices** → **All devices** → **SEA-DEV1**.
 

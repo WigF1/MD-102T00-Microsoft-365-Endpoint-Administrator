@@ -394,7 +394,7 @@ Attack Surface Reduction rules block behaviors commonly used by malware, such as
 
 1. Select **Next**.
 
-1. On the **Configuration settings** tab, configure the **same ASR rules listed above**, but set each one to **Audit** mode instead of **Block** mode. (One exception: keep `Block credential stealing from lsass.exe` in **Block** mode — it's the lowest false-positive rate ASR rule and worth enforcing fleet-wide on day one.)
+1. On the **Configuration settings** tab, configure the **same ASR rules listed above**, but set each one to **Audit** mode instead of **Block** mode. (One exception: keep `Block credential stealing from the Windows local security authority subsystem` in **Block** mode — it's the lowest false-positive rate ASR rule and worth enforcing fleet-wide on day one.)
 
 1. Select **Next**.
 
